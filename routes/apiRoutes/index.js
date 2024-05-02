@@ -17,7 +17,6 @@ router.post('/notes/', (req, res) => {
     const newNote = { title, text };
     readDB
     .then(notesArray => {
-        console.log(notesArray)
         const result = addNote(newNote, notesArray);
         result
         .then(res.json(`New note '${newNote.title}' successfully saved.`))
@@ -29,7 +28,17 @@ router.post('/notes/', (req, res) => {
 });
 
 router.delete('/notes/:id', (req, res) => {
-    // TODO: add DELETE functionality
+    const noteID = req.params.id;
+    readDB
+    .then(notesArray => {
+        const result = removeNote(noteID, notesArray);
+        result
+        .then(res.json(`Note has been deleted.`));
+    })
+    .catch((err) => {
+        console.error('Unable to delete note.');
+        res.json('Unable to delete note.');
+    })
 });
 
 module.exports = router;
