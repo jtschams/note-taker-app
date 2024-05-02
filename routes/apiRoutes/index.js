@@ -1,15 +1,34 @@
 const router = require('express').Router();
-// TODO: Require relevant helper functions from ../../helpers/
+const { readDB, addNote, removeNote } = require('../../helpers/fetchActions.js')
 
 router.get('/notes/', (req, res) => {
-    // TODO: add GET functionality
+    readDB.then(notesArray => {
+        res.json(notesArray);
+    })
+    .catch((err) => {
+        console.error(err)
+        res.json('Unable to read stored notes')
+    }
+    )
 });
 
 router.post('/notes/', (req, res) => {
-    // TODO: add POST functionality
+    const { title, text } = req.body;
+    const newNote = { title, text };
+    readDB
+    .then(notesArray => {
+        console.log(notesArray)
+        const result = addNote(newNote, notesArray);
+        result
+        .then(res.json(`New note '${newNote.title}' successfully saved.`))
+    })
+    .catch((err) => {
+        console.error('Unable to save note.');
+        res.json('Unable to save note.');
+    })
 });
 
-router.delete('/notes/', (req, res) => {
+router.delete('/notes/:id', (req, res) => {
     // TODO: add DELETE functionality
 });
 
